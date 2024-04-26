@@ -30,7 +30,7 @@ android {
 }
 
 dependencies {
-    implementation("com.github.dora4:dora:1.1.63")
+    implementation("com.github.dora4:dora:1.2.1")
     api("com.aliyun.dpa:oss-android-sdk:+")
 }
 
@@ -41,7 +41,7 @@ afterEvaluate {
                 from(components["release"])
                 groupId = "com.github.dora4"
                 artifactId = "dora-oss-support"
-                version = "1.0"
+                version = "1.1"
             }
         }
     }

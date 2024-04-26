@@ -10,6 +10,7 @@ import com.alibaba.sdk.android.oss.common.auth.OSSStsTokenCredentialProvider
 import dora.oss.OSSConfig.Companion.OSS_ACCESS_KEY
 import dora.oss.OSSConfig.Companion.OSS_ENDPOINT
 import dora.oss.OSSConfig.Companion.OSS_SECRET_KEY
+import dora.util.ManifestUtils
 import java.lang.IllegalStateException
 
 object OSSClient {
@@ -31,9 +32,11 @@ object OSSClient {
         conf.maxConcurrentRequest = 5 // synchronous request number，default 5
         conf.maxErrorRetry = 2 // retry，default 2
         OSSLog.enableLog() //write local log file ,path is SDCard_path\OSSLog\logs.csv
+        val accessKey = ManifestUtils.getApplicationMetadataValue(context, OSS_ACCESS_KEY)
+        val secretKey = ManifestUtils.getApplicationMetadataValue(context, OSS_SECRET_KEY)
         val credentialProvider: OSSCredentialProvider = OSSStsTokenCredentialProvider(
-            OSS_ACCESS_KEY,
-            OSS_SECRET_KEY,
+            accessKey,
+            secretKey,
             ""
         )
         oss = OSSClient(context, OSS_ENDPOINT, credentialProvider, conf)
