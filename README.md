@@ -17,3 +17,4 @@ dependencies {
     implementation("com.github.dora4:dora-oss-support:1.0")
 }
 ```
+❗️目前在测试阶段，不要使用，敏感信息请不要暴露在AndroidManifest.xml，后续会通过自助加解密的方式暴露加密后的metadata
