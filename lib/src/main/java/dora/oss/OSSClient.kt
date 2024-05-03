@@ -15,30 +15,50 @@ import java.lang.IllegalStateException
 
 object OSSClient {
 
-    var oss: OSS? = null
-        private set
+    private var oss: OSS? = null
+    private var codec: OSSCodec? = null
+    private var conf: ClientConfiguration? = null
+    private var enableLog: Boolean = false
 
+    @JvmStatic
     fun getOSS() : OSS {
         if (oss == null) {
-            throw IllegalStateException("please call init method first.")
+            throw IllegalStateException("GlobalConfig is required.")
         }
         return oss!!
     }
 
-    fun init(context: Context) {
-        val conf = ClientConfiguration()
-        conf.connectionTimeout = 15 * 1000 // connction time out default 15s
-        conf.socketTimeout = 10 * 300 * 1000 // socket timeout，default 5m
-        conf.maxConcurrentRequest = 5 // synchronous request number，default 5
-        conf.maxErrorRetry = 2 // retry，default 2
-        OSSLog.enableLog() //write local log file ,path is SDCard_path\OSSLog\logs.csv
+    /**
+     * 在[android.app.Application.attachBaseContext]中调用。
+     */
+    @JvmStatic
+    @JvmOverloads
+    fun init(codec: OSSCodec = OSSCodec(), conf: ClientConfiguration = ClientConfiguration(),
+             enableLog: Boolean = false) {
+        this.codec = codec
+        this.conf = conf
+        this.enableLog = enableLog
+    }
+
+    fun create(context: Context) {
+        if (codec == null || conf == null) {
+            throw IllegalStateException("Please call init method first.")
+        }
+        if (enableLog) {
+            // write local log file, path is SDCard_path/OSSLog/logs.csv
+            OSSLog.enableLog()
+        }
         val accessKey = ManifestUtils.getApplicationMetadataValue(context, OSS_ACCESS_KEY)
+        if (accessKey.equals("")) throw DoraOSSException(OSSConfig.OSS_ACCESS_KEY, true)
         val secretKey = ManifestUtils.getApplicationMetadataValue(context, OSS_SECRET_KEY)
+        if (secretKey.equals("")) throw DoraOSSException(OSSConfig.OSS_SECRET_KEY, true)
+        val endPoint = ManifestUtils.getApplicationMetadataValue(context, OSS_ENDPOINT)
+        if (endPoint.equals("")) throw DoraOSSException(OSSConfig.OSS_ENDPOINT, false)
         val credentialProvider: OSSCredentialProvider = OSSStsTokenCredentialProvider(
-            accessKey,
-            secretKey,
+            codec!!.decryptOSSMetadataValue(accessKey),
+            codec!!.decryptOSSMetadataValue(secretKey),
             ""
         )
-        oss = OSSClient(context, OSS_ENDPOINT, credentialProvider, conf)
+        oss = OSSClient(context, endPoint, credentialProvider, conf)
     }
 }

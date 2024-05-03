@@ -9,7 +9,7 @@ class OSSAppLifecycle : ApplicationLifecycleCallbacks {
     }
 
     override fun onCreate(application: Application) {
-        OSSClient.init(application)
+        OSSClient.create(application)
     }
 
     override fun onTerminate(application: Application) {
