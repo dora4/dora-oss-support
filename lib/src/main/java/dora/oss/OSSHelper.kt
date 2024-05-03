@@ -25,13 +25,13 @@ object OSSHelper {
         progressCallback: OSSProgressCallback<PutObjectRequest>? = null
     ) {
         val bucketName = ManifestUtils.getApplicationMetadataValue(context, OSS_BUCKET_NAME)
-        if (bucketName.equals("")) throw DoraOSSException(OSS_BUCKET_NAME, false)
+        if (bucketName.equals("")) throw DoraOSSException(OSS_BUCKET_NAME)
         val request = PutObjectRequest(
             bucketName,
             objectKey, path
         )
         request.progressCallback = progressCallback
-        OSSClient.getOSS().asyncPutObject(request, callback)
+        DoraOSS.getOSS().asyncPutObject(request, callback)
     }
 
     @JvmStatic
@@ -42,23 +42,23 @@ object OSSHelper {
         progressCallback: OSSProgressCallback<GetObjectRequest>? = null
     ) {
         val bucketName = ManifestUtils.getApplicationMetadataValue(context, OSS_BUCKET_NAME)
-        if (bucketName.equals("")) throw DoraOSSException(OSS_BUCKET_NAME, false)
+        if (bucketName.equals("")) throw DoraOSSException(OSS_BUCKET_NAME)
         val get = GetObjectRequest(bucketName, objectKey)
         get.setProgressListener(progressCallback)
-        OSSClient.getOSS().asyncGetObject(get, callback)
+        DoraOSS.getOSS().asyncGetObject(get, callback)
     }
 
     @JvmStatic
     fun getOSSUrl(context: Context, objectKey: String): String {
         return try {
             val bucketName = ManifestUtils.getApplicationMetadataValue(context, OSS_BUCKET_NAME)
-            if (bucketName.equals("")) throw DoraOSSException(OSS_BUCKET_NAME, false)
+            if (bucketName.equals("")) throw DoraOSSException(OSS_BUCKET_NAME)
             val urlRequest =
                 GeneratePresignedUrlRequest(
                     bucketName, objectKey,
                     System.currentTimeMillis() + 10.0.pow(10.0).toLong()
                 )
-            OSSClient.getOSS().presignConstrainedObjectURL(urlRequest)
+            DoraOSS.getOSS().presignConstrainedObjectURL(urlRequest)
         } catch (e: ClientException) {
             ""
         }
