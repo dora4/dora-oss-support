@@ -38,15 +38,16 @@ dependencies {
             android:value="加密后的OSS Secret Key"/>
 ```
 
-#### 初始化
-
+#### 如何使用
+##### 初始化
 在Application的attachBaseContext中调用OSSClient.init()方法进行初始化。
 如果init()方法不传自定义的OSSCodec对象，会有安全隐患。
 
-#### 使用
-
+##### API调用
+```kotlin
 OSSHelper.uploadFile()
 OSSHelper.downloadFile()
 OSSHelper.getOSSUrl()
+```
 通过OSSClient.getOSS()获取com.alibaba.sdk.android.oss.OSS对象。
 
