@@ -38,8 +38,8 @@ dependencies {
             android:value="加密后的OSS Secret Key"/>
 ```
 
-#### 如何使用
-##### 初始化
+#### 开始使用
+##### 初始化配置
 在Application的attachBaseContext中调用OSSClient.init()方法进行初始化。
 如果init()方法不传自定义的OSSCodec对象，会有安全隐患。
 
