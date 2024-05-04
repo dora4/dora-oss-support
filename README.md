@@ -32,8 +32,7 @@ dependencies {
             android:value="你的OSS Bucket Name"/>
 ```
 
-#### 开始使用
-##### 初始化配置
+#### 初始化配置
 在Application的attachBaseContext中调用DoraOSS.init()方法进行初始化。
 ```kotlin
     override fun attachBaseContext(base: Context?) {
@@ -47,7 +46,8 @@ dependencies {
     }
 ```
 
-##### API调用
+#### 开始使用
+
 ```kotlin
 OSSHelper.uploadFile()
 OSSHelper.downloadFile()
