@@ -13,8 +13,13 @@ import java.lang.IllegalStateException
 
 object DoraOSS {
 
+    /**
+     * 默认的OSS。
+     */
     private var oss: OSS? = null
-    private var key: OSSKey? = null
+    private var accessKey: String = ""
+    private var secretKey: String = ""
+    private var securityToken: String = ""
     private var conf: ClientConfiguration? = null
     private var enableLog: Boolean = false
 
@@ -31,15 +36,17 @@ object DoraOSS {
      */
     @JvmStatic
     @JvmOverloads
-    fun init(key: OSSKey, conf: ClientConfiguration = ClientConfiguration(),
+    fun init(accessKey: String, secretKey: String, securityToken: String = "", conf: ClientConfiguration = ClientConfiguration(),
              enableLog: Boolean = false) {
-        this.key = key
+        this.accessKey = accessKey
+        this.secretKey = secretKey
+        this.securityToken = securityToken
         this.conf = conf
         this.enableLog = enableLog
     }
 
     fun create(context: Context) {
-        if (key == null || conf == null) {
+        if (accessKey == "" || secretKey == "" || conf == null) {
             throw IllegalStateException("Please call init method first.")
         }
         if (enableLog) {
@@ -49,10 +56,10 @@ object DoraOSS {
         val endPoint = ManifestUtils.getApplicationMetadataValue(context, OSS_ENDPOINT)
         if (endPoint.equals("")) throw DoraOSSException(OSS_ENDPOINT)
         val credentialProvider: OSSCredentialProvider = OSSStsTokenCredentialProvider(
-            key!!.accessKey(),
-            key!!.secretKey(),
-            ""
+            accessKey,
+            secretKey,
+            securityToken
         )
-        oss = OSSClient(context, endPoint, credentialProvider, conf)
+        oss = OSSHelper.createClient(context, endPoint, credentialProvider, conf!!)
     }
 }
