@@ -7,11 +7,10 @@ plugins {
 
 android {
     namespace = "dora.oss"
-    compileSdk = 34
+    compileSdk = 36
 
     defaultConfig {
         minSdk = 21
-        targetSdk = 34
     }
 
     buildTypes {
@@ -24,13 +23,13 @@ android {
         dataBinding = true
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 }
 
 dependencies {
-    implementation("com.github.dora4:dora:1.3.14")
+    implementation("com.github.dora4:dora:1.3.53")
     api("com.aliyun.dpa:oss-android-sdk:+")
 }
 
@@ -41,7 +40,7 @@ afterEvaluate {
                 from(components["release"])
                 groupId = "com.github.dora4"
                 artifactId = "dora-oss-support"
-                version = "1.4"
+                version = "1.5"
             }
         }
     }
